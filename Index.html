@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EvangelionCraft Store</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0b0012;
+color:white;
+}
+
+header{
+background:#100018;
+padding:10px 20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 0 10px #a600ff;
+}
+
+button{
+background:#a600ff;
+border:none;
+padding:10px 18px;
+color:white;
+border-radius:6px;
+cursor:pointer;
+font-size:15px;
+}
+
+button:hover{
+background:#c800ff;
+}
+
+.container{padding:20px;}
+.hidden{display:none;}
+
+/* Cards gamer */
+.card{
+background:linear-gradient(145deg,#14001f,#09000d);
+padding:18px;
+border-radius:15px;
+margin-bottom:18px;
+border:1px solid #a600ff;
+text-align:center;
+box-shadow:0 0 15px #500070;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 35px #a600ff;
+}
+
+.cart-item{
+border-bottom:1px solid #333;
+padding:8px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>🔥 EvangelionCraft</h2>
+<div>
+<button onclick="openCart()">🛒 Carrinho</button>
+</div>
+</header>
+
+<!-- INICIO -->
+<div id="home" class="container">
+<h1>Bem-vindo ao EvangelionCraft</h1>
+<p>Servidor Minecraft Java e Bedrock com plugins top, VIPs, economia e muito PvP!</p>
+
+<h3>🌍 IPs do Servidor</h3>
+<p>Java Normal: <b>evangelioncraft.falix.gg</b></p>
+<p>Java Dinâmico: <b>46.4.47.71:27043</b></p>
+<p>Bedrock: <b>evangelioncraft.falix.gg</b></p>
+<p>Porta Bedrock: <b>27043</b></p>
+
+<button onclick="window.open('https://discord.gg/bMFcvQH68')">
+💬 Discord do Evangelion
+</button>
+
+<br><br>
+<button onclick="showMenu()">🛒 Ver Loja</button>
+</div>
+
+<!-- MENU LOJA -->
+<div id="menu" class="container hidden">
+<h2>🛍 Loja EvangelionCraft</h2>
+
+<div class="card">
+<h3>💎 VIPs</h3>
+<p>Compre vantagens exclusivas no servidor</p>
+<button onclick="showVips()">Ver VIPs</button>
+</div>
+
+<div class="card">
+<h3>⚔️ Kits</h3>
+<p>Compre kits prontos para PvP</p>
+<button onclick="showKits()">Ver Kits</button>
+</div>
+
+<button onclick="showHome()">⬅ Voltar</button>
+</div>
+
+<!-- VIPS -->
+<div id="vips" class="container hidden">
+<h2>💎 VIPs</h2>
+
+<div class="card">
+<h3>VIP SUPER</h3>
+<p>💰 R$10</p>
+<p>Kit ferro, chat VIP, 10 maçãs douradas</p>
+<button onclick="addToCart('VIP SUPER',10)">Comprar</button>
+</div>
+
+<div class="card">
+<h3>VIP ULTRA</h3>
+<p>💰 R$20</p>
+<p>Kit diamante P3, ferramentas encantadas, 1 elytra</p>
+<button onclick="addToCart('VIP ULTRA',20)">Comprar</button>
+</div>
+
+<div class="card">
+<h3>VIP EVANGELION</h3>
+<p>💰 R$30</p>
+<p>Full diamante P4, Elytra, Totens, Shulker Box</p>
+<button onclick="addToCart('VIP EVANGELION',30)">Comprar</button>
+</div>
+
+<button onclick="showMenu()">⬅ Voltar</button>
+</div>
+
+<!-- KITS -->
+<div id="kits" class="container hidden">
+<h2>⚔️ Kits PvP</h2>
+
+<div class="card">
+<h3>KIT FULL</h3>
+<p>💰 R$12</p>
+<p>Armadura P4, Elytra, Arco OP, Totens</p>
+<button onclick="addToCart('KIT FULL',12)">Comprar</button>
+</div>
+
+<button onclick="showMenu()">⬅ Voltar</button>
+</div>
+
+<!-- CARRINHO -->
+<div id="cart" class="container hidden">
+<h2>🛒 Seu Carrinho</h2>
+<div id="cartItems"></div>
+<h3 id="total"></h3>
+
+<button onclick="pix()">💳 Pagar no Pix</button>
+<button onclick="closeCart()">Fechar</button>
+</div>
+
+<script>
+let cart = [];
+
+// Mostrar abas
+function showHome(){
+hideAll();
+document.getElementById("home").classList.remove("hidden");
+}
+
+function showMenu(){
+hideAll();
+document.getElementById("menu").classList.remove("hidden");
+}
+
+function showVips(){
+hideAll();
+document.getElementById("vips").classList.remove("hidden");
+}
+
+function showKits(){
+hideAll();
+document.getElementById("kits").classList.remove("hidden");
+}
+
+function hideAll(){
+document.getElementById("home").classList.add("hidden");
+document.getElementById("menu").classList.add("hidden");
+document.getElementById("vips").classList.add("hidden");
+document.getElementById("kits").classList.add("hidden");
+document.getElementById("cart").classList.add("hidden");
+}
+
+// Carrinho
+function addToCart(name, price){
+cart.push({name,price});
+alert("✅ " + name + " foi adicionado ao carrinho!");
+}
+
+function openCart(){
+hideAll();
+document.getElementById("cart").classList.remove("hidden");
+updateCart();
+}
+
+function closeCart(){
+showMenu();
+}
+
+function updateCart(){
+let html="";
+let total=0;
+
+cart.forEach(item=>{
+html += `<div class='cart-item'>${item.name} - R$ ${item.price}</div>`;
+total += item.price;
+});
+
+document.getElementById("cartItems").innerHTML=html;
+document.getElementById("total").innerText="Total: R$ " + total;
+}
+
+function pix(){
+let chave = "SUA_CHAVE_PIX_AQUI";
+alert("Pague no Pix:\n" + chave + "\n\nDepois mande o comprovante no Discord!");
+}
+</script>
+
+</body>
+</html>
